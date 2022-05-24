@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+
+
+
 use App\Models\Category;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\StorePostRequest;
@@ -17,9 +20,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('category', 'user')->latest()->get();
-        
-        return view('post.index', compact('posts'));
+        $postsreq = Post::with('category', 'user')->latest();
+        $recent = $postsreq->first();
+ 
+        $posts = $postsreq->paginate(5);
+        return view('post.index', compact('posts', 'recent'));
     }
 
     /**

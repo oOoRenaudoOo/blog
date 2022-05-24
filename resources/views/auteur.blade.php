@@ -3,17 +3,12 @@
         <div><a href="#" class="flex items-center"><img
             src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=731&amp;q=80"
             alt="avatar" class="hidden object-cover w-10 h-10 mx-4 rounded-full sm:block">
-        <h1 class="font-bold text-gray-700 hover:underline">{{ $user->name }}</h1>
-    </a></div>       
+        <h1 class="font-bold text-gray-700 hover:underline">{{ Auth::user()->name }}</h1>
+    </a></div>
     </x-slot>
-    
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-            {{-- @if(session('success'))
-                {{ session('success') }}
-            @endif --}}
-
 
 
             {{-- affichage tutoriel --}}
@@ -39,7 +34,7 @@
                     <div class="container flex justify-between mx-auto">
                         <div class="w-full lg:w-8/12">
                             <div class="flex items-center justify-between">
-                                <h1 class="text-xl font-bold text-gray-700 md:text-2xl">Vos Post</h1>
+                                <h1 class="text-xl font-bold text-gray-700 md:text-2xl">@if ($user->id == Auth::user()->id) Vos Post @else Liste des Posts @endif</h1>
                                 <div>
                                     <select class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                         <option>Latest</option>
@@ -52,7 +47,7 @@
                             @endphp
 
                            
-                            @forelse ($posts as $post)
+                            @forelse ($user->posts as $post)
                             <div class="mt-6">
                                 <div class="px-10 py-6 mx-auto bg-white rounded-lg shadow-md">
                                     <div class="flex items-center justify-between">
@@ -64,7 +59,7 @@
                                                         $i++
                                                     @endphp
                                                 </span>
-                                            </div>{{ $post->created_at->translatedFormat('d M Y') }} / {{ $post->created_at->format('h:i:s') }}
+                                            </div>{{ $post->created_at->translatedFormat('d M Y') }} / {{$post->created_at->format('h:i:s') }}
                                         
                                         </span>
                                             <a href="#"
@@ -77,13 +72,11 @@
                                     </div>
                                     <div class="flex items-center justify-between mt-4"><a href="{{ route('posts.show',$post) }}"
                                             class="text-blue-500 hover:underline">Voir plus</a>
-                                        {{-- <div>
-                                            <a href="#" class="flex items-center"><img
+                                        <div><a href="#" class="flex items-center"><img
                                                     src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=731&amp;q=80"
                                                     alt="avatar" class="hidden object-cover w-10 h-10 mx-4 rounded-full sm:block">
                                                 <h1 class="font-bold text-gray-700 hover:underline">{{ $post->user->name }}</h1>
-                                            </a>
-                                        </div> --}}
+                                            </a></div>
                                     </div>
                                 </div>
                             </div>
@@ -96,7 +89,7 @@
                             @endforelse
         
                         </div>
-                        <x-authorComponent :firstPost="$recent">
+                        <x-authorComponent :firstPost="$user->posts[$user->posts->count()-1]">
                         </x-authorComponent>
         
                         {{-- @include('partials.sidebar') --}}
